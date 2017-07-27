@@ -91,13 +91,21 @@ public void drawMatrix(int wi, int he, float [] array){
         float min=float(cp5.get(Textfield.class,"min").getText());
         float max=float(cp5.get(Textfield.class,"max").getText());
         
+        float max_avg=getMaxAverageTimeBySize(wi*110+10,he*110+10);
+        float min_avg=getMinAverageTimeBySize(wi*110+10,he*110+10);
+        
         if(array[h*wi+w]<min || array[h*wi+w]>max){
           stroke(0);
           fill(70);
           rect(w*len+len,h*len+len,len,len);
         }else{
           stroke(0);
-          fill(255);
+          
+          //ヒートマップのように色付けする
+          float current_avg=array[h*wi+w];
+          float color_prop=510*((current_avg-min_avg)/(max_avg-min_avg));
+          fill(color_prop,510-color_prop,0);
+          
           rect(w*len+len,h*len+len,len,len);
           textAlign(CENTER,CENTER);
           fill(0);
@@ -211,6 +219,29 @@ public float getAverageTimeBySize(int w, int h){
     return db.getFloat("avg(time)");
   }
   return float(0);
+}
+
+//そのウィンドウサイズの中で一番時間のかかる場所（平均で比べる）
+public float getMaxAverageTimeBySize(int w, int h){
+  float [] array=new float [36];
+  for(int i=0; i<array.length; i++){
+    String stmt="select avg(time) from selection_times where width="+w+" and height="+h+" and position="+(i+1);
+    db.query(stmt);
+    db.next();
+    array[i]=db.getFloat("avg(time)");
+  }
+  return max(array);
+}
+
+public float getMinAverageTimeBySize(int w, int h){
+  float [] array=new float [36];
+  for(int i=0; i<array.length; i++){
+    String stmt="select avg(time) from selection_times where width="+w+" and height="+h+" and position="+(i+1);
+    db.query(stmt);
+    db.next();
+    array[i]=db.getFloat("avg(time)");
+  }
+  return min(array);
 }
 
 public float getAverageTime(){
