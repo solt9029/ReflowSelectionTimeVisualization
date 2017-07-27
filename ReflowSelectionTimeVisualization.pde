@@ -42,7 +42,6 @@ void draw() {
 }
 
 public void WindowSize_340_1330(){
-  println(getAverageTimeByPositionAndSize(1,670,670));
   background(30);
   drawMenuText();
   draw340_1330();
@@ -61,28 +60,49 @@ public void WindowSize_560_890(){
 }
 
 public void WindowSize_670_670(){
+  background(30);
+  drawMenuText();
+  draw670_670();
 }
 
 public void WindowSize_780_670(){
+  background(30);
+  drawMenuText();
+  draw780_670();
 }
 
 public void WindowSize_890_560(){
+  background(30);
+  drawMenuText();
+  draw890_560();
 }
 
 public void WindowSize_1990_230(){
+  background(30);
+  drawMenuText();
+  draw1990_230();
 }
 
 public void drawMatrix(int wi, int he, float [] array){
   int len=50;
   for(int h=0; h<he; h++){
     for(int w=0; w<wi; w++){
-      stroke(0);
-      fill(255);
-      rect(w*len+len,h*len+len,len,len);
       if(h*wi+w<36){
-        textAlign(CENTER,CENTER);
-        fill(0);
-        text(str((int)array[h*wi+w]),w*len+len+len/2,h*len+len+len/2);
+        float min=float(cp5.get(Textfield.class,"min").getText());
+        float max=float(cp5.get(Textfield.class,"max").getText());
+        
+        if(array[h*wi+w]<min || array[h*wi+w]>max){
+          stroke(0);
+          fill(70);
+          rect(w*len+len,h*len+len,len,len);
+        }else{
+          stroke(0);
+          fill(255);
+          rect(w*len+len,h*len+len,len,len);
+          textAlign(CENTER,CENTER);
+          fill(0);
+          text(str((int)array[h*wi+w]),w*len+len+len/2,h*len+len+len/2);
+        }
       }
     }
   }
